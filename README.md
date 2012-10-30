@@ -1,23 +1,23 @@
 #Yii Highsoft - Hightchart and Highstok chart wrapper
 
-HighsoftWidget is a wrapper to {@link http://www.highcharts.com/ Highcharts and Highstock}
+HighsoftWidget is a wrapper to [Highcharts](http://www.highcharts.com/ "Highcharts Official Site") and [Highstock](http://www.highcharts.com/products/highstock "Highstock Official Site")
 Highcharts is a charting library written in pure JavaScript;
 Highstock lets you create stock or general timeline charts in pure JavaScript;
 https://github.com/highslide-software/highcharts.com
 
 ## Features:
-- Script to update assets from Highsoft github with auto minifier (Google Clousure)
-- Unique widget for Hightchart and Highstok
-- Accepts valid array or JSON string to options
-- Global atributes for Highcharts object
+- Script to update assets from Highsoft github with auto minifier (Google Clousure API)
+- Unique widget for Hightchart and Highstock
+- Accepts valid PHP array or JSON string to options
+- Global attributes for Highcharts object
 - "More" option to register highcharts-more.js
 - Unminified javascripts in YII_DEBUG mode
-- Not regiter jquery dependency on ajax requests
+- No register jQuery dependency on ajax requests
 - MIT License (Except assets)
 
 ## Example:
 
-To use this widget, you may insert the following code in a view:
+To use this widget, you need to insert the following code in a view:
 ```php
 $this->Widget('ext.highsoft.HighsoftWidget', array(
    'type' => 'stock', // or 'chart'
@@ -38,12 +38,11 @@ $this->Widget('ext.highsoft.HighsoftWidget', array(
    )
 ));
 ```
-By configuring the {@link $options} property, you may specify the options
-that need to be passed to the Highcharts JavaScript object. Please refer to
-the demo gallery and documentation on the {@link http://www.highcharts.com/
-Highcharts website} for possible options.
+By configuring the **$options** property, you may specify the options
+that need to be passed to the Highcharts Javascript object. Please refer to
+the demo gallery and documentation on the [HighCharts Documentation Site](http://www.highcharts.com/) for possible options.
 
-Alternatively, you can use a valid JSON string in place of an associative array to specify options:
+Alternatively, you can use a valid JSON string instead of an associative array to specify options:
 
 ```php
 $this->Widget('ext.highsoft.HighsoftWidget', array(
@@ -65,7 +64,7 @@ $this->Widget('ext.highsoft.HighsoftWidget', array(
 ```
 Note: You must provide a valid JSON string (e.g. double quotes) when using
 the second option. You can quickly validate your JSON string online using
-{@link http://jsonlint.com/ JSONLint}.
+[JSONLint](http://jsonlint.com/).
 
 Note: You do not need to specify the <code>chart->renderTo</code> option as
 is shown in many of the examples on the Highcharts website. This value is
