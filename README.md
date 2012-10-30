@@ -1,4 +1,4 @@
-#Yii Highsoft - Hightchart and Highstok chart wrapper
+#Yii Highsoft - Hightchart and Highstock chart wrapper
 
 HighsoftWidget is a wrapper to [Highcharts](http://www.highcharts.com/ "Highcharts Official Site") and [Highstock](http://www.highcharts.com/products/highstock "Highstock Official Site")
 Highcharts is a charting library written in pure JavaScript;
