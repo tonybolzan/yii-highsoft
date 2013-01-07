@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 /**
  * Highcharts Updater/Downloader
@@ -14,7 +15,8 @@
 $options = array(
     'assets'  => 'assets',
     'closure' => 'http://closure-compiler.appspot.com/compile',
-    'site'    => 'https://raw.github.com/highslide-software/highcharts.com/v2.3.3/js', // Version 2.3.3
+    'site'    => 'http://github.highcharts.com/master', // 
+    //'site'    => 'https://raw.github.com/highslide-software/highcharts.com/v2.3.3/js', // Version 2.3.3
     //'site'    => 'http://code.highcharts.com/master', // 
     //'site'    => 'https://raw.github.com/highslide-software/highcharts.com/master/js', // Development version
     
@@ -76,25 +78,42 @@ $options = array(
         //),
     ),
 );
+if(is_dir($options['assets'].'.old')) {
+    system('rm -rf "'.$options["assets"].'.old"');
+}
+if(is_dir($options['assets'])) {
+    rename($options['assets'], $options['assets'].'.old') or die("Unable to rename {$options['assets']} to {$options['assets']}.old.". PHP_EOL);
+}
+
+mkdir($options['assets']) or die("Unable to create new directory {$options['assets']}". PHP_EOL);
 
 foreach ($options['files'] as $file) {
     $url      = $options['site']   . $file['folder'] . $file['name'];
-    $path_raw = $options['assets'] . $file['folder'] . $file['name'];
-    $path_min = $options['assets'] . $file['folder'] . $file['min'];
+    $asset    = $options['assets'] . $file['folder'];
+    $path_raw = $asset . $file['name'];
+    $path_min = $asset . $file['min'];
     
     echo $path_raw .' <= '. $url . PHP_EOL;
     
+    if(!is_dir($asset)) {
+        mkdir($asset) or die("Unable to create new directory {$asset}". PHP_EOL);
+    }
+    
     $raw = file_get_contents($url);
     
-    $ch = curl_init($options['closure']);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, 'output_info=compiled_code&output_format=text&compilation_level=SIMPLE_OPTIMIZATIONS&js_code=' . urlencode($raw));
-    $minified = curl_exec($ch);
-    curl_close($ch);
-    
-    file_put_contents($path_min, $minified, LOCK_EX);
-    file_put_contents($path_raw, $raw, LOCK_EX);
+    if(!$raw) {
+        echo '    -> Falhou';
+    } else {
+        $ch = curl_init($options['closure']);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, 'output_info=compiled_code&output_format=text&compilation_level=SIMPLE_OPTIMIZATIONS&js_code=' . urlencode($raw));
+        $minified = curl_exec($ch);
+        curl_close($ch);
+
+        file_put_contents($path_raw, $raw, LOCK_EX);
+        file_put_contents($path_min, $minified, LOCK_EX);
+    }
 }
 
-echo 'Complete...'. PHP_EOL;
+echo PHP_EOL . 'Please remove old assets directory'. PHP_EOL .'Complete...'. PHP_EOL;

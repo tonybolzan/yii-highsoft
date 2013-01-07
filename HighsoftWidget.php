@@ -117,7 +117,8 @@ class HighsoftWidget extends CWidget {
      */
     private $defaultOptions = array(
         'exporting' => array(
-            'enabled' => true
+            'enabled' => true,
+            'width' => 1280,
         ),
     );
 
