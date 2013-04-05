@@ -6,7 +6,7 @@
  * @author Tonin De Rosso Bolzan <tonin@odig.net>
  * @link http://github.com/tonybolzan/highsoft
  * @license http://www.opensource.org/licenses/mit-license.php "MIT License for this file"
- * @version 0.1
+ * @version 3.0.0
  * 
  * @link http://code.highcharts.com "Highcharts file service"
  * @link https://github.com/highslide-software/highcharts.com "GitHub Repo"
