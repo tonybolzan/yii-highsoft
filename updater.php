@@ -16,6 +16,7 @@ $options = array(
     'assets'  => 'assets',
     'closure' => 'http://closure-compiler.appspot.com/compile',
     'site'    => 'http://github.highcharts.com/master', // 
+    //'site'    => 'http://github.highcharts.com/v2.3.5', // 
     //'site'    => 'https://raw.github.com/highslide-software/highcharts.com/v2.3.3/js', // Version 2.3.3
     //'site'    => 'http://code.highcharts.com/master', // 
     //'site'    => 'https://raw.github.com/highslide-software/highcharts.com/master/js', // Development version

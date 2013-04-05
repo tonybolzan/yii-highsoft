@@ -13,6 +13,7 @@ https://github.com/highslide-software/highcharts.com
 - "More" option to register highcharts-more.js
 - Unminified javascripts in YII_DEBUG mode
 - No register jQuery dependency on ajax requests
+- Only one script is loaded in multiple highcharts charts on ajax requests
 - MIT License (Except assets)
 
 ## Example:
@@ -70,3 +71,9 @@ Note: You do not need to specify the <code>chart->renderTo</code> option as
 is shown in many of the examples on the Highcharts website. This value is
 automatically populated with the id of the widget's container element. If you
 wish to use a different container, feel free to specify a custom value.
+
+## ChangeLog
+* **3.0.0** :
+    - Updated Highcharts to Version 3.0.0 (2013-04-05)
+    - Improved generation graphics for ajax requests
+    - Chart container `div` tag not closing (fixed)

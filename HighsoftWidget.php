@@ -161,8 +161,8 @@ class HighsoftWidget extends CWidget {
         $jsOptions = CJavaScript::encode($this->options);
         $jsGlobal  = CJavaScript::encode($this->global);
         
-
-        echo CHtml::tag('div', $this->htmlOptions);
+        echo CHtml::openTag('div', $this->htmlOptions);
+        echo CHtml::closeTag('div');
 
         $id = __CLASS__ . '#' . $this->htmlOptions['id'];
         $this->registerScripts($id, $jsGlobal, $jsOptions);
@@ -213,22 +213,38 @@ class HighsoftWidget extends CWidget {
         if (isset($this->options['theme'])) {
             $register[] = 'themes/' . $this->options['theme'] . (YII_DEBUG ? '.js' : '.min.js');
         }
-
+            
         // Publish and register all files specified
         $basePath = dirname(__FILE__) . DIRECTORY_SEPARATOR . $this->assets . DIRECTORY_SEPARATOR;
         $baseUrl = Yii::app()->assetManager->publish($basePath, false, 1, YII_DEBUG);
 
-        foreach ($register as $scriptFile) {
-            $cs->registerScriptFile("$baseUrl/$scriptFile");
-        }
-
         // Register the graph and jquery if not ajax request
         if (Yii::app()->request->isAjaxRequest) {
+            foreach ($register as &$scriptFile) {
+                $scriptFile = $baseUrl . '/' . $scriptFile;
+            }
+
+            $jsFiles = '["'. implode('","', $register) .'"]';
+
+            array_unshift($script, <<<JS
+                !(function($,a){
+                    if(typeof window.Highcharts === 'undefined') {
+                        var body = $('body');
+                        for(var i=0, l=a.length;i<l;i++) {
+                          body.append($('<script>').attr('src',a[i]));
+                        }
+                    }
+                }(jQuery,{$jsFiles}));
+JS
+            );
+            
             $cs->registerScript($id, implode('', $script), CClientScript::POS_END);
         } else {
+            foreach ($register as &$scriptFile) {
+                $cs->registerScriptFile("$baseUrl/$scriptFile");
+            }
             $cs->registerCoreScript('jquery');
             $cs->registerScript($id, implode('', $script), CClientScript::POS_LOAD);
         }
     }
-
 }
