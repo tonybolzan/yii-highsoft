@@ -1,12 +1,12 @@
 <?php
 
 /**
- * HighsoftWidget class file.
+ * HighsoftWidget class file
  *
  * @author Tonin De Rosso Bolzan <tonin@odig.net>
- * @link http://github.com/tonybolzan/highsoft
+ * @link http://github.com/tonybolzan/yii-highsoft
  * @license http://www.opensource.org/licenses/mit-license.php "MIT License for this file"
- * @version 3.0.0
+ * @version 3.0.10
  * 
  * @link http://code.highcharts.com "Highcharts file service"
  * @link https://github.com/highslide-software/highcharts.com "GitHub Repo"
@@ -186,7 +186,7 @@ class HighsoftWidget extends CWidget {
 
         switch ($this->type) {
             case 'chart':
-                $script[] = "var chart_{$this->htmlOptions['id']} = new Highcharts.Chart($jsOptions);";
+                $script[] = "new Highcharts.Chart($jsOptions);";
                 $register[] = YII_DEBUG ? 'highcharts.src.js' : 'highcharts.js';
 
                 if ($this->more) {
@@ -194,7 +194,7 @@ class HighsoftWidget extends CWidget {
                 }
                 break;
             case 'stock':
-                $script[] = "var chart_{$this->htmlOptions['id']} = new Highcharts.StockChart($jsOptions);";
+                $script[] = "new Highcharts.StockChart($jsOptions);";
                 $register[] = YII_DEBUG ? 'highstock.src.js' : 'highstock.js';
                 break;
             default:
@@ -211,7 +211,7 @@ class HighsoftWidget extends CWidget {
 
         // Register global theme if specified via the 'theme' option
         if (isset($this->options['theme'])) {
-            $register[] = 'themes/' . $this->options['theme'] . (YII_DEBUG ? '.js' : '.min.js');
+            $register[] = 'themes/' . $this->options['theme'] . '.js';
         }
             
         // Publish and register all files specified
@@ -225,25 +225,38 @@ class HighsoftWidget extends CWidget {
             }
 
             $jsFiles = '["'. implode('","', $register) .'"]';
+            $jsChart = 'function(){ ' . implode('', $script) . '; }';
 
-            array_unshift($script, <<<JS
-                !(function($,a){
-                    if(typeof window.Highcharts === 'undefined') {
-                        var body = $('body');
-                        for(var i=0, l=a.length;i<l;i++) {
-                          body.append($('<script>').attr('src',a[i]));
+            $cs->registerScript($id, <<<JS
+                !(function($, urls, chart){
+                    function getScriptRecursive() {
+                        if (urls.length === 0) {
+                            chart();
+                            return;
                         }
+
+                        $.ajax({
+                            'url': urls.shift(),
+                            'dataType': 'script',
+                            'cache': true,
+                            'async': true,
+                            'success': getScriptRecursive
+                        });
                     }
-                }(jQuery,{$jsFiles}));
+
+                    if(typeof window.Highcharts === 'undefined') {
+                        getScriptRecursive();
+                    } else {
+                        chart();
+                    }
+                }(jQuery, {$jsFiles}, {$jsChart} ));
 JS
             );
-            
-            $cs->registerScript($id, implode('', $script), CClientScript::POS_END);
         } else {
+            $cs->registerCoreScript('jquery');
             foreach ($register as &$scriptFile) {
                 $cs->registerScriptFile("$baseUrl/$scriptFile");
             }
-            $cs->registerCoreScript('jquery');
             $cs->registerScript($id, implode('', $script), CClientScript::POS_LOAD);
         }
     }

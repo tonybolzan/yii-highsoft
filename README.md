@@ -73,6 +73,10 @@ automatically populated with the id of the widget's container element. If you
 wish to use a different container, feel free to specify a custom value.
 
 ## ChangeLog
+* **3.0.10** :
+    - Updated Highcharts to Version 3.0.10 (2014-03-10)
+    - Updated Highstock to Version 1.3.10 (2014-03-10)
+    - Improved generation graphics for ajax requests #2
 * **3.0.0** :
     - Updated Highcharts to Version 3.0.0 (2013-04-05)
     - Improved generation graphics for ajax requests
